@@ -1,0 +1,21 @@
+{
+  "name": "marksai",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "ascii-table": "^0.0.9",
+    "discord-arts": "^0.5.8",
+    "discord.js": "^14.15.2",
+    "enmap": "^6.0.1",
+    "glob": "^8.0.3",
+    "megadb": "^3.4.0",
+    "ms": "^2.1.3"
+  }
+}
