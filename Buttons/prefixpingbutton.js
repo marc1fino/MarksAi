@@ -7,9 +7,16 @@ module.exports = {
   /**
    *
    * @param {Message} message
-   * @param {Args} args
    */
   async execute(message, args) {
+    console.log(message);
+    const originalAuthor = message.interaction
+      ? message.interaction.user
+      : message.author;
+    if (!originalAuthor) {
+      console.error("No se pudo determinar el autor original del mensaje.");
+      return;
+    }
     const pinged = new EmbedBuilder()
       .setTitle("Client Ping")
       .setColor("White")
@@ -31,9 +38,9 @@ module.exports = {
         })}`,
       })
       .setFooter({
-        text: `${message.author.username}`,
+        text: `${originalAuthor.username}`,
         iconURL:
-          message.author.displayAvatarURL({ dynamic: true }) ||
+          originalAuthor.displayAvatarURL({ dynamic: true }) ||
           message.client.user.displayAvatarURL({ dynamic: true }),
       });
 

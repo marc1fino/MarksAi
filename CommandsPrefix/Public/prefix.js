@@ -11,6 +11,7 @@ module.exports = {
    * @param {Message} message
    */
   async execute(message, args) {
+    console.log(args);
     if (
       !message.member.permissions.has(PermissionsBitField.Flags.Administrator)
     ) {
@@ -23,6 +24,10 @@ module.exports = {
     }
 
     const prfx = args[0];
+    if (!prfx)
+      return message.reply({
+        content: "❌ / Please specify a prefix to change",
+      });
     const serverId = message.guild.id;
 
     await pfDB.set(`PREFIX.${serverId}_create_newPrefix`, Date.now());

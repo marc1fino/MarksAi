@@ -8,6 +8,7 @@ const {
 const { loadCommands } = require("../../Handlers/commandHandler");
 const { loadEvents } = require("../../Handlers/eventHandler");
 const { loadButtons } = require("../../Handlers/buttonHandler");
+const { loadPrefixs } = require("../../Handlers/prefixHandler");
 
 module.exports = {
   developer: true,
@@ -23,6 +24,11 @@ module.exports = {
     )
     .addSubcommand((options) =>
       options.setName(`buttons`).setDescription("(💻) / Reload my buttons")
+    )
+    .addSubcommand((options) =>
+      options
+        .setName(`prefixs`)
+        .setDescription("(💻) / Reload my prefix commands")
     )
     .addSubcommand((options) =>
       options.setName(`all`).setDescription("(💻) / Reload me")
@@ -67,6 +73,15 @@ module.exports = {
           });
         }
         break;
+      case "prefixs":
+        {
+          loadPrefixs(client);
+          interaction.reply({
+            content: `✅ / ¡Comandos de Prefix Recargados con Éxito!`,
+            ephemeral: true,
+          });
+        }
+        break;
       case "all":
         {
           loadCommands(client);
@@ -74,6 +89,7 @@ module.exports = {
             client.removeListener(`${key}`, value, true);
           loadEvents(client);
           loadButtons(client);
+          loadPrefixs(client);
           interaction.reply({
             content: `✅ / ¡Bot Recargado Con Éxito!`,
             ephemeral: true,

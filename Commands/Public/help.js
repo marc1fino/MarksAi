@@ -68,28 +68,24 @@ module.exports = {
 
     const embed1 = new EmbedBuilder()
       .setTitle("Setup Commands")
-      .setDescription("Coming Soon...")
-      .setFooter({ text: "🔧 / Setup the bot using this commands" })
+      .setDescription("🔧 / Setup the bot using this commands")
       .setTimestamp()
       .setColor("#2c2d31");
 
     const embed2 = new EmbedBuilder()
       .setTitle("AI Image Commands")
-      .setDescription("Coming Soon...")
-      .setFooter({ text: "🖼️ / Generate images using this commands" })
+      .setDescription("🖼️ / Generate images using this commands")
       .setTimestamp()
       .setColor("#2c2d31");
 
     const embed3 = new EmbedBuilder()
       .setTitle("AI Text Commands")
-      .setDescription("Coming Soon...")
-      .setFooter({ text: "📝 / Generate text using this commands" })
+      .setDescription("📝 / Generate text using this commands")
       .setTimestamp()
       .setColor("#2c2d31");
     const embed4 = new EmbedBuilder()
       .setTitle("AI Other Commands")
-      .setDescription("Coming Soon...")
-      .setFooter({ text: "🔨 / Generate other things using this commands" })
+      .setDescription("🔨 / Generate other things using this commands")
       .setTimestamp()
       .setColor("#2c2d31");
     collector.on("collect", async (i) => {
