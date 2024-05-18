@@ -1,5 +1,10 @@
-const { EmbedBuilder, Message, Args } = require("discord.js");
+const { EmbedBuilder, Message } = require("discord.js");
+const megadb = require("megadb");
+const infodb = new megadb.crearDB("username");
+const urldb = new megadb.crearDB("avatarurl");
+const userlistdb = new megadb.crearDB("userlist");
 const ms = require("ms");
+
 module.exports = {
   data: {
     name: `prefixpingbutton`,
@@ -10,13 +15,22 @@ module.exports = {
    */
   async execute(message, args) {
     console.log(message);
-    const originalAuthor = message.interaction
-      ? message.interaction.user
-      : message.author;
-    if (!originalAuthor) {
-      console.error("No se pudo determinar el autor original del mensaje.");
-      return;
+
+    const guildId = message.guildId;
+    let username = "Unknown User";
+    let avatarURL = message.client.user.displayAvatarURL({ dynamic: true });
+
+    try {
+      const userList = await userlistdb.get(`USERLIST.${guildId}`);
+      if (userList && userList.length > 0) {
+        const userId = userList[userList.length - 1]; // Obtener el ID del usuario más reciente
+        username = await infodb.get(`USERNAME.${guildId}.${userId}.username`);
+        avatarURL = await urldb.get(`AVATARURL.${guildId}.${userId}.avatarURL`);
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
     }
+
     const pinged = new EmbedBuilder()
       .setTitle("Client Ping")
       .setColor("White")
@@ -38,10 +52,8 @@ module.exports = {
         })}`,
       })
       .setFooter({
-        text: `${originalAuthor.username}`,
-        iconURL:
-          originalAuthor.displayAvatarURL({ dynamic: true }) ||
-          message.client.user.displayAvatarURL({ dynamic: true }),
+        text: `${username}`,
+        iconURL: avatarURL,
       });
 
     message.reply({ embeds: [pinged] });
