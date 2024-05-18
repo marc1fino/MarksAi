@@ -8,7 +8,7 @@ const {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("help")
-    .setDescription("Mira mis comandos"),
+    .setDescription("👨‍🏫 / Watch all the bot commands"),
 
   async execute(interaction) {
     const cmp = new ActionRowBuilder().addComponents(
@@ -49,11 +49,11 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setTitle("MarksAi Help Menu")
-      .setImage(
-        "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExeHpmZG1rcjBiMjJxMG90ODNocnp6eHJtcGYzcnk4cGlyY295cHZ5ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/o9TNUe54nuAFu78vq1/giphy.gif"
-      )
+      .setImage("https://i.ibb.co/C9TqP3f/marksfuncs-2.png")
       .setColor("#2c2d31")
-      .setDescription(`**👇 / Please select an option**`);
+      .setDescription(
+        `**👇 / Please select an option, all commands are avaliable in prefix too!**`
+      );
 
     let mensaje = await interaction.reply({
       embeds: [embed],
@@ -70,23 +70,47 @@ module.exports = {
       .setTitle("Setup Commands")
       .setDescription("🔧 / Setup the bot using this commands")
       .setTimestamp()
+      .setImage(
+        "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXE5bzQ5NDE3MnFxM2RuY3p5Z2tpeWkzczQ3MHZrMjM5cng3bmsyMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Ee3IjUlLtGqCCl4XLB/giphy.gif"
+      )
+      .addFields({
+        name: "</help:1240005680929439784>",
+        value: "👨‍🏫 / Watch all the bot commands",
+      })
+      .addFields({
+        name: "</set-prefix:1241351822485225515>",
+        value: "❓ / Set server prefix",
+      })
       .setColor("#2c2d31");
 
     const embed2 = new EmbedBuilder()
       .setTitle("AI Image Commands")
       .setDescription("🖼️ / Generate images using this commands")
       .setTimestamp()
+      .setImage(
+        "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHZsczhheG44N2xsZW5iNmo5cnh2bXNxNjZub2JibHppb3V3Y2R4OSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/WPUezDL0d3OOoEkb3u/giphy.gif"
+      )
       .setColor("#2c2d31");
 
     const embed3 = new EmbedBuilder()
       .setTitle("AI Text Commands")
       .setDescription("📝 / Generate text using this commands")
       .setTimestamp()
+      .setImage(
+        "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTYyNjRiaG0xc2FwZzhubm44aWhzbDhrMWxvdTQzbTBhdWtsdWt0MyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bhwiUKXEn0a6cAJDlC/giphy.gif"
+      )
       .setColor("#2c2d31");
     const embed4 = new EmbedBuilder()
       .setTitle("AI Other Commands")
       .setDescription("🔨 / Generate other things using this commands")
       .setTimestamp()
+      .addFields({
+        name: "</ping:1238945215000350923>",
+        value: "🏓 / Watch client ping",
+      })
+      .setImage(
+        "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYTE3NXcwcnRxN25ueHc0ajZsd3pkdGI3czk1NjlqajV2a2liM29jYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/0dhMT8ISqVHPPTah8k/giphy.gif"
+      )
       .setColor("#2c2d31");
     collector.on("collect", async (i) => {
       if (i.values[0] === "uno") {

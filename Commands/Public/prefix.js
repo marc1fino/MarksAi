@@ -10,7 +10,7 @@ const ms = require("ms");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("setprefix")
+    .setName("set-prefix")
     .setDescription("❓ / Set server prefix")
 
     .addStringOption((option) =>
