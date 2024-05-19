@@ -16,7 +16,6 @@ module.exports = {
    * @param {Message} message
    */
   async execute(message, args) {
-    console.log(message);
     const button = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setCustomId("prefixpingbutton")

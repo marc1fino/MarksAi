@@ -15,6 +15,10 @@ const client = new Client({
   partials: [User, Message, GuildMember, ThreadMember],
 });
 
+const { OpenAi } = require("openai");
+const megadb = require("megadb");
+const pfDB = new megadb.crearDB("prefix");
+const cbSchema = require("./Schemas/cbschema");
 const { loadEvents } = require("./Handlers/eventHandler");
 const { loadButtons } = require("./Handlers/buttonHandler");
 
@@ -23,6 +27,50 @@ client.events = new Collection();
 client.commands = new Collection();
 client.buttons = new Collection();
 client.prefixs = new Collection();
+client.on("messageCreate", async (message) => {
+  const ignore_prefix =
+    (await pfDB.get(`PREFIX.${message.guild.id}.prfx`)) || "+";
+  const Aidata = await cbSchema.findOne({ Guild: message.guild.id });
+  const apiKeyExists = await cbSchema.exists({
+    ApiKey: { $exists: true, $ne: null },
+  });
+  const correctApiKey = await new EmbedBuilder()
+    .setColor("Red")
+    .setTitle("**> Invalid API Key!**")
+    .setDescription(
+      `❌ / An error ocurred, make sure the OpenAI API key isn't invalid.`
+    )
+    .setFooter({
+      text: client.user.username,
+      iconURL: client.user.displayAvatarURL(),
+    })
+    .setTimestamp();
+
+  if (!Aidata || !apiKeyExists) return;
+
+  const openai = new OpenAi({ apiKey: Aidata.ApiKey });
+
+  if (message.channel.id !== Aidata.Channel) return;
+  if (message.author.bot) return;
+  if (
+    message.content.startsWith(ignore_prefix) &&
+    !message.mentions.users.has(client.user.id)
+  )
+    return;
+  const response = await openai.chat.completions
+    .create({
+      model: Aidata.Model,
+      messages: [
+        { role: "system", content: "You are a helpful and friendly chatbot." },
+        { role: "user", content: message.content },
+      ],
+    })
+    .catch((error) => {
+      console.error(`OpenAI Error:\n`, error);
+      return message.reply({ embeds: [correctApiKey] });
+    });
+  message.reply({ content: response.choices[0].message.content });
+});
 
 client.on("guildCreate", (guild) => {
   const topChannel = guild.channels.cache

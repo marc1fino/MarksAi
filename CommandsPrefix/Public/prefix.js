@@ -4,14 +4,13 @@ const pfDB = new megadb.crearDB("prefix");
 const ms = require("ms");
 
 module.exports = {
-  name: "setprefix",
+  name: "setup-prefix",
   alias: [],
   /**
    *
    * @param {Message} message
    */
   async execute(message, args) {
-    console.log(args);
     if (
       !message.member.permissions.has(PermissionsBitField.Flags.Administrator)
     ) {

@@ -1,7 +1,8 @@
 const { loadCommands } = require("../../Handlers/commandHandler");
 const { loadPrefixs } = require("../../Handlers/prefixHandler");
 const { Activity, ActivityType } = require("discord.js");
-
+const config = require("../../config.json");
+const mongoose = require("mongoose");
 module.exports = {
   name: "ready",
   once: true,
@@ -21,6 +22,12 @@ module.exports = {
       client.user.setActivity(status[random]);
     }, 60000);
     console.log(`${client.user.username} se ha iniciado con éxito 🌐`);
+    await mongoose.connect(config.mongopass);
+    if (mongoose.connect) {
+      console.log(
+        `${client.user.username} se ha conectado a la DB correctamente 👨‍⚖️`
+      );
+    }
     loadCommands(client);
     loadPrefixs(client);
   },

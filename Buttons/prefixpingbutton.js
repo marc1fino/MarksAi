@@ -14,8 +14,6 @@ module.exports = {
    * @param {Message} message
    */
   async execute(message, args) {
-    console.log(message);
-
     const guildId = message.guildId;
     let username = "Unknown User";
     let avatarURL = message.client.user.displayAvatarURL({ dynamic: true });
