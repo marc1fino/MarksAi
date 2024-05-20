@@ -11,6 +11,7 @@ const ms = require("ms");
 const megadb = require("megadb");
 const pfDB = new megadb.crearDB("prefix");
 const cbSchema = require("../../Schemas/cbschema");
+const geminiSchema = require("../../Schemas/geminischema");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("disable")
@@ -47,7 +48,6 @@ module.exports = {
               embeds: [permission],
               ephemeral: true,
             });
-
           try {
             await cbSchema.deleteMany({ Guild: interaction.guild.id });
             await interaction.reply({

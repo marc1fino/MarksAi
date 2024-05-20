@@ -10,8 +10,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "apexify.js": "^2.2.0",
+    "apexify.js": "^4.0.12",
     "ascii-table": "^0.0.9",
+    "crypto": "^1.0.1",
     "discord-arts": "^0.5.8",
     "discord.js": "^14.15.2",
     "enmap": "^6.0.1",

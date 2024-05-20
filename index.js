@@ -40,16 +40,16 @@ client.on("guildCreate", (guild) => {
       })
       .addFields({
         name: `📢 ┇ Need help?`,
-        value: `\n You can join the [[Support server]](https://discord.gg/ZRP8W23Q) `,
-      }) // <-- Aca va el link del servidor de tu bot
+        value: `\n You can join the [Support server](https://discord.gg/ZRP8W23Q) `,
+      })
       .addFields({
         name: `🔌 ┇ What are the AI commands?`,
         value: `\n See the complete list of AI commands in </help:1240005680929439784> or \`+help\``,
       })
       .addFields({
         name: `🤖 ┇ Invite the bot!`,
-        value: `\n [[Click here]](https://discord.com/oauth2/authorize?client_id=1238487304553762889&permissions=8&scope=bot%20applications.commands)`,
-      }) // <-- Aca va el link de la invitacion de tu bot
+        value: `\n [Click here](https://discord.com/oauth2/authorize?client_id=1238487304553762889&permissions=8&scope=bot%20applications.commands)`,
+      })
       .setFooter({
         text: client.user.username,
         iconURL: client.user.displayAvatarURL(),

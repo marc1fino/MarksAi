@@ -5,7 +5,7 @@ let cbSchema = new Schema({
   Channel: String,
   Model: String,
   ImageModel: String,
-  ApiKey: String,
+  ImageEnhancer: String,
 });
 
 module.exports = model("cbSchema", cbSchema);
