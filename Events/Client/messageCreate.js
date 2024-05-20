@@ -1,5 +1,7 @@
 const megadb = require("megadb");
 const pfDB = new megadb.crearDB("prefix");
+const OpenAi = require("openai");
+const cbSchema = require("../../Schemas/cbschema");
 module.exports = {
   name: "messageCreate",
   once: false,

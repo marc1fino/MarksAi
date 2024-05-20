@@ -12,7 +12,6 @@ const megadb = require("megadb");
 const pfDB = new megadb.crearDB("prefix");
 const cbSchema = require("../../Schemas/cbschema");
 module.exports = {
-  developer: true,
   data: new SlashCommandBuilder()
     .setName("disable")
     .setDescription("🛑 / Disable client functions")
@@ -50,7 +49,7 @@ module.exports = {
             });
 
           try {
-            await aiSchema.deleteMany({ Guild: interaction.guild.id });
+            await cbSchema.deleteMany({ Guild: interaction.guild.id });
             await interaction.reply({
               embeds: [succesful],
               ephemeral: true,

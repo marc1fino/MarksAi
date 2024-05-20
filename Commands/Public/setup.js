@@ -12,7 +12,6 @@ const megadb = require("megadb");
 const pfDB = new megadb.crearDB("prefix");
 const cbSchema = require("../../Schemas/cbschema");
 module.exports = {
-  developer: true,
   data: new SlashCommandBuilder()
     .setName("setup")
     .setDescription("🔧 / Setup client")
@@ -44,11 +43,26 @@ module.exports = {
             )
             .setRequired(true)
             .addChoices(
-              { name: "text-davinci-003", value: "text-davinci-003" },
-              { name: "text-curie-001", value: "text-curie-001" },
-              { name: "text-babbage-001", value: "text-babbage-001" },
-              { name: "text-ada-001", value: "text-ada-001" },
-              { name: "gpt-4", value: "gpt-4" }
+              { name: "gpt-3.5-turbo", value: "gpt-3.5-turbo" },
+              { name: "gpt-3.5-turbo-0125", value: "gpt-3.5-turbo-0125" },
+              { name: "gpt-3.5-turbo-1106", value: "gpt-3.5-turbo-1106" },
+              { name: "gpt-3.5-turbo-16k", value: "gpt-3.5-turbo-16k" },
+              { name: "gpt-4-turbo", value: "gpt-4-turbo" },
+              { name: "gpt-4", value: "gpt-4" },
+              { name: "gpt-4-turbo-preview", value: "gpt-4-turbo-preview" },
+              { name: "gpt-4o", value: "gpt-4o" }
+            )
+        )
+        .addStringOption((option) =>
+          option
+            .setName("image-model")
+            .setDescription(
+              "🟨 / Select the OpenAI Image Model that will use the bot."
+            )
+            .setRequired(true)
+            .addChoices(
+              { name: "dall-e-3", value: "dall-e-3" },
+              { name: "dall-e-2", value: "dall-e-2" }
             )
         )
     )
@@ -152,6 +166,7 @@ module.exports = {
 
         const canal = interaction.options.getChannel("channel");
         const model = interaction.options.getString("model");
+        const image_model = interaction.options.getString("image-model");
         const api_key = interaction.options.getString("api_key");
         const data = await cbSchema.findOne({ Guild: interaction.guild.id });
 
@@ -179,6 +194,7 @@ module.exports = {
           Guild: interaction.guild.id,
           Channel: canal.id,
           Model: model,
+          ImageModel: image_model,
           ApiKey: api_key,
         });
         const succesful = new EmbedBuilder().setDescription(
