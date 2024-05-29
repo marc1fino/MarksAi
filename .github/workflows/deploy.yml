@@ -21,8 +21,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Save PM2 state
-        run: pm2 save
+      - name: Deploy application
+        run: |
+          pm2 restart all
+          pm2 save
 
       - name: Verify PM2 status
         run: pm2 status
