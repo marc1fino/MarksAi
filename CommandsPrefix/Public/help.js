@@ -91,6 +91,10 @@ module.exports = {
               name: "</set-prefix:1241351822485225515>",
               value: "❓ / Set server prefix",
             })
+            .addFields({
+              name: "</setup:1241351822485225515>",
+              value: "❓ / Set server prefix",
+            })
             .setColor("#2c2d31");
           break;
         case "tres":

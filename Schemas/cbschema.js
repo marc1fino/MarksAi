@@ -6,6 +6,11 @@ let cbSchema = new Schema({
   Model: String,
   ImageModel: String,
   ImageEnhancer: String,
+  ImageSeed: String,
+  ImageSteps: String,
+  ImageSampler: String,
+  ImageStyle: String,
+  NegativePrompt: String,
 });
 
 module.exports = model("cbSchema", cbSchema);

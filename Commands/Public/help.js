@@ -8,7 +8,13 @@ const {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("help")
-    .setDescription("👨‍🏫 / Watch all the bot commands"),
+    .setDescription("👨‍🏫 / Watch all the bot commands")
+    .addStringOption((query) =>
+      query
+        .setName("command")
+        .setDescription("👨‍🏫 / The command you want help for")
+        .setRequired(false)
+    ),
 
   async execute(interaction) {
     const cmp = new ActionRowBuilder().addComponents(
@@ -78,14 +84,18 @@ module.exports = {
         value: "👨‍🏫 / Watch all the bot commands",
       })
       .addFields({
-        name: "</set-prefix:1241351822485225515>",
-        value: "❓ / Set server prefix",
+        name: "</setup:1241485042929373308>",
+        value: "🔧 / Setup client",
       })
       .setColor("#2c2d31");
 
     const embed2 = new EmbedBuilder()
       .setTitle("AI Image Commands")
       .setDescription("🖼️ / Generate images using this commands")
+      .addFields({
+        name: "</image:1242498969679171686>",
+        value: "🌆 / Generate an Image using AI",
+      })
       .setTimestamp()
       .setImage(
         "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHZsczhheG44N2xsZW5iNmo5cnh2bXNxNjZub2JibHppb3V3Y2R4OSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/WPUezDL0d3OOoEkb3u/giphy.gif"
@@ -95,6 +105,10 @@ module.exports = {
     const embed3 = new EmbedBuilder()
       .setTitle("AI Text Commands")
       .setDescription("📝 / Generate text using this commands")
+      .addFields({
+        name: "</ask:1242117387717972041>",
+        value: "💬 / Ask a question to the AI",
+      })
       .setTimestamp()
       .setImage(
         "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTYyNjRiaG0xc2FwZzhubm44aWhzbDhrMWxvdTQzbTBhdWtsdWt0MyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bhwiUKXEn0a6cAJDlC/giphy.gif"

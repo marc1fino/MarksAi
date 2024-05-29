@@ -6,6 +6,7 @@ const geminiSchema = require("../../Schemas/geminischema");
 const crypto = require("crypto");
 const config = require("../../config.json");
 const { ApexAI } = require("apexify.js");
+const translate = require("translate-google");
 
 const algorithm = "aes-256-cbc";
 const secretKey = config.secret;
@@ -54,13 +55,7 @@ module.exports = {
       })
       .setTimestamp();
 
-    if (
-      !Aidata ||
-      Aidata.Model === "gpt-3.5-turbo" ||
-      Aidata.Model === "gpt-4-turbo" ||
-      Aidata.Model === "gpt-4" ||
-      Aidata.Model === "gpt-4o"
-    )
+    if (!Aidata || Aidata.Model === "gpt-4-turbo" || Aidata.Model === "gpt-4o")
       return;
     if (message.channel.id !== Aidata.Channel) return;
     if (message.author.bot) return;
@@ -69,16 +64,19 @@ module.exports = {
       !message.mentions.users.has(client.user.id)
     )
       return;
+
     const aiOptions = {
       imagine: {
         enable: true, // Habilita el procesamiento de imágenes
         drawTrigger: [
-          "create",
           "imagine",
+          "create",
+          "draw",
           "generate",
-          "crea",
-          "imagina",
-          "genera",
+          "paint",
+          "sketch",
+          "design",
+          "illustrate",
         ], // Desencadenantes para generar las imágenes (por ejemplo, palabras clave o frases)
         imageModel: Aidata.ImageModel, // Especifica el modelo o servicio de procesamiento de imágenes (e.g., "prodia", "dalle", etc.)
         numOfImages: 1, // Especifica el nmero de imágenes para procesar
@@ -99,16 +97,17 @@ module.exports = {
             "tetas",
             "sexo",
           ],
+          deepCheck: true,
         },
         enhancer: {
-          enable: false,
+          enable: true,
           enhancerModal: Aidata.ImageEnhancer || "ERSGAN_4x",
-          negative_prompt: "",
+          negative_prompt: Aidata.NegativePrompt || "",
           cfg_Scale: 7,
-          sample: "DDIM",
-          steps: 20,
-          seed: -1,
-          imgStyle: "enhace",
+          sample: Aidata.ImageSampler || "DDIM",
+          steps: Aidata.ImageSteps || 20,
+          seed: Aidata.ImageSeed || -1,
+          imgStyle: Aidata.ImageStyle || "enhace",
         },
       },
       chat: {
@@ -116,10 +115,7 @@ module.exports = {
         readFiles: true,
         readImages: true,
         personality: "", // cree un archivo de texto (personality.txt), personalize la personalidad de tu AI, luego defina su ruta y agregala
-        API_KEY:
-          Aidata.Model === "gemini-pro" || Aidata.Model === "gemini-flash"
-            ? decrypt(apiKey.ApiKey)
-            : "", // Afrege su propia clave si usa gemini-pro/gemeni-flash. Agregue solo su propia clave en caso de que haya recibido un límite de tarifa
+        API_KEY: "", // Afrege su propia clave si usa gemini-pro/gemeni-flash. Agregue solo su propia clave en caso de que haya recibido un límite de tarifa
         memory: {
           memoryOn: true,
           id: message.author.id,
@@ -128,6 +124,12 @@ module.exports = {
           enable: false,
           speed: 70,
           delay: 2000,
+        },
+      },
+      others: {
+        messageType: {
+          type: "reply",
+          intialContent: "",
         },
       },
     };

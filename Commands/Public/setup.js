@@ -13,6 +13,7 @@ const pfDB = new megadb.crearDB("prefix");
 const cbSchema = require("../../Schemas/cbschema");
 const openaiSchema = require("../../Schemas/openaischema");
 const geminiSchema = require("../../Schemas/geminischema");
+const Personality = require("../../Schemas/personalityschema");
 const crypto = require("crypto");
 const config = require("../../config.json");
 
@@ -62,18 +63,16 @@ module.exports = {
         .addStringOption((option) =>
           option
             .setName("model")
-            .setDescription(
-              "🤖 / Select the OpenAI Model that will use the bot."
-            )
+            .setDescription("🤖 / Select the Text Model that will use the bot.")
             .setRequired(true)
             .addChoices(
-              { name: "gpt-3.5-turbo", value: "gpt-3.5-turbo" },
+              { name: "gpt-3.5-turbo", value: "turbo" },
+              { name: "gpt-3.5-turbo-16k", value: "turbo-16k" },
               { name: "gpt-4-turbo", value: "gpt-4-turbo" },
-              { name: "gpt-4", value: "gpt-4" },
+              { name: "gpt-4", value: "v3" },
+              { name: "gpt-4-32k", value: "v3-32k" },
               { name: "gpt-4o", value: "gpt-4o" },
               { name: "gemini", value: "gemini" },
-              { name: "gemini-pro", value: "gemini-pro" },
-              { name: "gemini-flash", value: "gemini-flash" },
               { name: "facebook-ai", value: "facebook-ai" }
             )
         )
@@ -93,9 +92,68 @@ module.exports = {
               { name: "v3", value: "v3" },
               { name: "lexica", value: "lexica" },
               { name: "prodia", value: "prodia" },
-              { name: "animefly", value: "animefly" },
               { name: "raava", value: "raava" },
-              { name: "shonin", value: "shonin" }
+              { name: "shonin", value: "shonin" },
+              {
+                name: "animagineXLV3_v30.safetensors[75f2f05b]",
+                value: "animagineXLV3_v30.safetensors[75f2f05b]",
+              },
+              {
+                name: "dreamshaperXL10_alpha2.safetensors[c8afe2ef]",
+                value: "dreamshaperXL10_alpha2.safetensors[c8afe2ef]",
+              },
+              {
+                name: "dynavisionXL_0411.safetensors[c39cc051]",
+                value: "dynavisionXL_0411.safetensors[c39cc051]",
+              },
+              {
+                name: "juggernautXL_v45.safetensors[e75f5471]",
+                value: "juggernautXL_v45.safetensors[e75f5471]",
+              },
+              {
+                name: "realismEngineSDXL_v10.safetensors[af771c3f]",
+                value: "realismEngineSDXL_v10.safetensors[af771c3f]",
+              },
+              {
+                name: "realvisxlV40.safetensors[f7fdcb51]",
+                value: "realvisxlV40.safetensors[f7fdcb51]",
+              },
+              {
+                name: "sd_xl_base_1.0_inpainting_0.1.safetensors[5679a81a]",
+                value: "sd_xl_base_1.0_inpainting_0.1.safetensors[5679a81a]",
+              },
+              {
+                name: "3Guofeng3_v34.safetensors[50f420de]",
+                value: "3Guofeng3_v34.safetensors[50f420de]",
+              },
+              {
+                name: "absolutereality_V16.safetensors[37db0fc3]",
+                value: "absolutereality_V16.safetensors[37db0fc3]",
+              },
+              {
+                name: "amIReal_V41.safetensors[0a8a2e61]",
+                value: "amIReal_V41.safetensors[0a8a2e61]",
+              },
+              {
+                name: "analog-diffusion-1.0.ckpt[9ca13f02]",
+                value: "analog-diffusion-1.0.ckpt[9ca13f02]",
+              },
+              {
+                name: "anythingv3_0-pruned.ckpt[2700c435]",
+                value: "anythingv3_0-pruned.ckpt[2700c435]",
+              },
+              {
+                name: "anything-v4.5-pruned.ckpt[65745d25]",
+                value: "anything-v4.5-pruned.ckpt[65745d25]",
+              },
+              {
+                name: "anythingV5_PrtRE.safetensors[893e49b9]",
+                value: "anythingV5_PrtRE.safetensors[893e49b9]",
+              },
+              {
+                name: "AOM3A3_orangemixs.safetensors[9600da17]",
+                value: "AOM3A3_orangemixs.safetensors[9600da17]",
+              }
             )
         )
         .addStringOption((option) =>
@@ -115,6 +173,97 @@ module.exports = {
               { name: "ScuNET GAN", value: "ScuNET GAN" },
               { name: "ScuNET PSNR", value: "ScuNET PSNR" },
               { name: "SwinlR 4x", value: "SwinlR 4x" }
+            )
+        )
+        .addStringOption((option) =>
+          option
+            .setName("negative-prompt")
+            .setDescription(
+              "🔴 / The negative prompt to use for generating the image"
+            )
+        )
+        .addIntegerOption((option) =>
+          option
+            .setName("seed")
+            .setDescription("🔱 / The seed to use for generating the image")
+            .setMinValue(0)
+            .setMaxValue(10000000000)
+        )
+        .addIntegerOption((option) =>
+          option
+            .setName("steps")
+            .setDescription("👞 / The steps to use for generating the image")
+            .setMinValue(0)
+            .setMaxValue(100)
+        )
+        .addStringOption((option) =>
+          option
+            .setName("image-style")
+            .setDescription(
+              "🎨 / The image style to use for generating the image"
+            )
+            .addChoices(
+              { name: "3d-model", value: "3d-model" },
+              { name: "analog-film", value: "analog-film" },
+              { name: "animefly", value: "animefly" },
+              { name: "cinematic", value: "cinematic" },
+              { name: "comic-book", value: "comic-book" },
+              { name: "digital-art", value: "digital-art" },
+              { name: "enhance", value: "enhance" },
+              { name: "isometric", value: "isometric" },
+              { name: "fantasy-art", value: "fantasy-art" },
+              { name: "line-art", value: "line-art" },
+              { name: "low-poly", value: "low-poly" },
+              { name: "neon-punk", value: "neon-punk" },
+              { name: "origami", value: "origami" },
+              { name: "photographic", value: "photographic" },
+              { name: "pixel-art", value: "pixel-art" },
+              { name: "texture", value: "texture" },
+              { name: "craft-clay", value: "craft-clay" }
+            )
+        )
+        .addStringOption((option) =>
+          option
+            .setName("sampler")
+            .setDescription("💫 / The sampler to use for generating the image")
+            .addChoices(
+              { name: "DPM++ 2M Karras", value: "DPM++ 2M Karras" },
+              { name: "DPM++ SDE Karras", value: "DPM++ SDE Karras" },
+              {
+                name: "DPM++ 2M SDE Exponential",
+                value: "DPM++ 2M SDE Exponential",
+              },
+              { name: "DPM++ 2M SDE Karras", value: "DPM++ 2M SDE Karras" },
+              { name: "Euler a", value: "Euler a" },
+              { name: "Euler", value: "Euler" },
+              { name: "LMS", value: "LMS" },
+              { name: "Heun", value: "Heun" },
+              { name: "DPM2", value: "DPM2" },
+              { name: "DPM2 a", value: "DPM2 a" },
+              {
+                name: "DPM++ 2M SDE Heun Karras",
+                value: "DPM++ 2M SDE Heun Karras",
+              },
+              {
+                name: "DPM++ 2M SDE Heun Exponential",
+                value: "DPM++ 2M SDE Heun Exponential",
+              },
+              { name: "DPM++ 3M SDE", value: "DPM++ 3M SDE" },
+              { name: "DPM++ 3M SDE Karras", value: "DPM++ 3M SDE Karras" },
+              {
+                name: "DPM++ 3M SDE Exponential",
+                value: "DPM++ 3M SDE Exponential",
+              },
+              { name: "DPM fast", value: "DPM fast" },
+              { name: "DPM adaptive", value: "DPM adaptive" },
+              { name: "LMS Karras", value: "LMS Karras" },
+              { name: "DPM2 Karras", value: "DPM2 Karras" },
+              { name: "DPM2 a Karras", value: "DPM2 a Karras" },
+              { name: "DPM++ 2S a Karras", value: "DPM++ 2S a Karras" },
+              { name: "Restart", value: "Restart" },
+              { name: "DDIM", value: "DDIM" },
+              { name: "PLMS", value: "PLMS" },
+              { name: "UniPC", value: "UniPC" }
             )
         )
     )
@@ -152,6 +301,40 @@ module.exports = {
             .setDescription(
               "🟣 / Your Gemini API key that will use the Gemini paid based models"
             )
+            .setRequired(true)
+        )
+    )
+    .addSubcommand((options) =>
+      options
+        .setName(`personality`)
+        .setDescription("🎅 / Setup your custom personality AI")
+        .addStringOption((option) =>
+          option
+            .setName("based_model")
+            .setDescription(
+              "📳 / The based model that will use the personality AI"
+            )
+            .setRequired(true)
+            .addChoices(
+              { name: "gpt-3.5-turbo", value: "turbo" },
+              { name: "gpt-4-turbo", value: "gpt-4-turbo" },
+              { name: "gpt-4", value: "v3" },
+              { name: "gpt-4o", value: "gpt-4o" },
+              { name: "gemini", value: "gemini" },
+              { name: "gpt-3.5-turbo-16k", value: "turbo-16k" },
+              { name: "gpt-4-32k", value: "v3-32k" }
+            )
+        )
+        .addStringOption((option) =>
+          option
+            .setName("prompt")
+            .setDescription("🕴 / How will the custom personality work")
+            .setRequired(true)
+        )
+        .addStringOption((option) =>
+          option
+            .setName("name")
+            .setDescription("🅰 / The name of the custom personality")
             .setRequired(true)
         )
     ),
@@ -246,6 +429,12 @@ module.exports = {
         const model = interaction.options.getString("model");
         const image_enhancer = interaction.options.getString("image-enhancer");
         const image_model = interaction.options.getString("image-model");
+        const image_seed = interaction.options.getString("image-seed");
+        const image_steps = interaction.options.getString("image-steps");
+        const image_sampler = interaction.options.getString("image-sampler");
+        const image_style = interaction.options.getString("image-style");
+        const negative_prompt =
+          interaction.options.getString("negative-prompt");
         const openaiapi_key = openaiSchema.findOne({
           UserId: interaction.user.id,
         });
@@ -253,13 +442,7 @@ module.exports = {
           UserId: interaction.user.id,
         });
         const data = await cbSchema.findOne({ Guild: interaction.guild.id });
-        if (
-          !openaiapi_key &&
-          (model === "gpt-3.5-turbo" ||
-            model === "gpt-4-turbo" ||
-            model === "gpt-4" ||
-            model === "gpt-4o")
-        ) {
+        if (!openaiapi_key && (model === "gpt-4-turbo" || model === "gpt-4o")) {
           const noApiKey = new EmbedBuilder().setDescription(
             `❌ You need to setup your OpenAI API key first, use the command \`setup openai\`.`
           );
@@ -270,33 +453,17 @@ module.exports = {
         }
         if (
           (image_model === "dall-e-3" || image_model === "dall-e-2") &&
-          !(
-            model === "gpt-3.5-turbo" ||
-            model === "gpt-4-turbo" ||
-            model === "gpt-4" ||
-            model === "gpt-4o"
-          )
+          !(model === "gpt-4-turbo" || model === "gpt-4o")
         ) {
           const noMatch = new EmbedBuilder().setDescription(
-            `❌ The image model "dall-e-3" and the image model "dall-e-2" are only available for the models "gpt-3.5-turbo", "gpt-4-turbo", "gpt-4", "gpt-4o" (OpenAI based models).`
+            `❌ The image model "dall-e-3" and the image model "dall-e-2" are only available for the models "gpt-4-turbo" and "gpt-4o" (OpenAI based models).`
           );
           return await interaction.reply({
             embeds: [noMatch],
             ephemeral: true,
           });
         }
-        if (
-          (!geminiapi_key && model === "gemini-pro") ||
-          model === "gemini-flash"
-        ) {
-          const noApiKey = new EmbedBuilder().setDescription(
-            `❌ You need to setup your Gemini API key first to use this models, execute the command \`setup gemini\`.`
-          );
-          return await interaction.reply({
-            embeds: [noApiKey],
-            ephemeral: true,
-          });
-        }
+
         if (data) {
           const exists = new EmbedBuilder().setDescription(
             `❌ You already have a chatbot system in this channel, to reset it use the command  \`disable chatbot\`.`
@@ -323,6 +490,11 @@ module.exports = {
           Model: model,
           ImageModel: image_model,
           ImageEnhancer: image_enhancer,
+          ImageSeed: image_seed,
+          ImageSteps: image_steps,
+          ImageSampler: image_sampler,
+          NegativePrompt: negative_prompt,
+          ImageStyle: image_style,
         });
         const succesful = new EmbedBuilder().setDescription(
           `✅ The chatbot system has been set up correctly in ${canal}.`
@@ -389,6 +561,38 @@ module.exports = {
           ephemeral: true,
         });
         break;
+      }
+      case "personality": {
+        const based_model = interaction.options.getString("based_model");
+        const prompt = interaction.options.getString("prompt");
+        const name = interaction.options.getString("name");
+
+        let user = await Personality.findOne({ UserId: interaction.user.id });
+
+        if (user) {
+          // Si el usuario existe, agrega una nueva personalidad al array
+          user.Personalities.push({
+            name: name,
+            value: prompt,
+          });
+          await user.save();
+        } else {
+          // Si el usuario no existe, crea un nuevo documento
+          user = new Personality({
+            UserId: interaction.user.id,
+            Personalities: [{ name: name, value: prompt }],
+            BasedModel: based_model,
+          });
+          await user.save();
+        }
+
+        const successEmbed = new EmbedBuilder().setDescription(
+          `✅ Your custom personality has been set up correctly.`
+        );
+        await interaction.reply({
+          embeds: [successEmbed],
+          ephemeral: true,
+        });
       }
     }
   },

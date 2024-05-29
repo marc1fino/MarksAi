@@ -6,12 +6,16 @@ const {
   PermissionsBitField,
   EmbedBuilder,
   ChannelType,
+  ActionRowBuilder,
+  StringSelectMenuBuilder,
 } = require("discord.js");
 const ms = require("ms");
 const megadb = require("megadb");
 const pfDB = new megadb.crearDB("prefix");
 const cbSchema = require("../../Schemas/cbschema");
 const geminiSchema = require("../../Schemas/geminischema");
+const personalitySchema = require("../../Schemas/personalityschema");
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("disable")
@@ -19,6 +23,17 @@ module.exports = {
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addSubcommand((options) =>
       options.setName(`chatbot`).setDescription("🧩 / Disable chatbot commands")
+    )
+    .addSubcommand((options) =>
+      options
+        .setName(`personality`)
+        .setDescription("🎅 / Disable 1 custom personality")
+        .addStringOption((option) =>
+          option
+            .setName("name")
+            .setDescription("🧔 / Select a personality to disable")
+            .setRequired(true)
+        )
     ),
 
   /**
@@ -59,6 +74,61 @@ module.exports = {
           }
         }
         break;
+
+      case "personality": {
+        const userId = interaction.user.id;
+        const userPersonalities = await getUserPersonalities(userId);
+
+        if (userPersonalities.length === 0) {
+          const noPersonalitiesEmbed = new EmbedBuilder().setDescription(
+            "❌ / You don't have any personalities available to disable."
+          );
+          return await interaction.reply({
+            embeds: [noPersonalitiesEmbed],
+            ephemeral: true,
+          });
+        }
+
+        const personalityName = interaction.options.getString("name");
+
+        if (!userPersonalities.some((p) => p.name === personalityName)) {
+          const invalidPersonalityEmbed = new EmbedBuilder().setDescription(
+            "❌ / The selected personality is not valid."
+          );
+          return await interaction.reply({
+            embeds: [invalidPersonalityEmbed],
+            ephemeral: true,
+          });
+        }
+
+        await personalitySchema.updateOne(
+          { UserId: interaction.user.id },
+          { $pull: { Personalities: { name: personalityName } } }
+        );
+        const disabledPersonalityEmbed = new EmbedBuilder().setDescription(
+          `✅ / The personality ${personalityName} has been disabled correctly.`
+        );
+        await interaction.reply({
+          embeds: [disabledPersonalityEmbed],
+          ephemeral: true,
+        });
+        break;
+      }
     }
   },
 };
+
+/**
+ * Función para obtener las personalidades del usuario
+ * @param {String} userId
+ * @returns {Array} Lista de personalidades
+ */
+async function getUserPersonalities(userId) {
+  try {
+    const user = await personalitySchema.findOne({ UserId: userId });
+    return user ? user.Personalities : [];
+  } catch (error) {
+    console.error("Error al obtener personalidades:", error);
+    return [];
+  }
+}
